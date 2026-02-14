@@ -1,7 +1,7 @@
 import sys
 import os
 
-# 1. Add the current directory to Python path so we can import 'app'
+# 1. Add the current directory to Python path so can import 'app'
 sys.path.append(os.getcwd())
 
 from app.core.database import engine
