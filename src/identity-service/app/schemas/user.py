@@ -62,3 +62,9 @@ class UserListResponse(BaseModel):
     page: int
     size: int
     items: List[UserResponse]
+
+# Response for both Login and Signup
+class AuthResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: UserResponse
