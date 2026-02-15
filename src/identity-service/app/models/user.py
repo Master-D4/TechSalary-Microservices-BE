@@ -36,3 +36,4 @@ class User(Base):
 
     # Relationship to Roles
     roles = relationship("Role", secondary=user_roles, backref="users")
+    
