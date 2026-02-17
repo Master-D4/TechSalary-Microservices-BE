@@ -1,4 +1,5 @@
 from pydantic import BaseModel, EmailStr, Field, field_validator
+from pydantic_core import PydanticCustomError
 from typing import List, Optional, Any
 
 # Base Schema
@@ -10,7 +11,19 @@ class UserBase(BaseModel):
 
 # Input for Signup
 class UserCreate(UserBase):
-    password: str = Field(..., min_length=8)
+    password: str = Field(...)
+
+    @field_validator('password')
+    @classmethod
+    def validate_password(cls, v: str) -> str:
+        if len(v) < 8:
+            # raise ValueError('Password must be at least 8 characters long')
+            raise PydanticCustomError(
+                'password_too_short',
+                'Password must be at least 8 characters long',
+                {'min_length': 8}
+            )
+        return v
 
 # Input for Login
 class UserLogin(BaseModel):
