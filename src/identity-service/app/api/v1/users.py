@@ -28,6 +28,16 @@ def read_users(
     }
 
 # 2. UPDATE USER
+@router.put("/me", response_model=schemas.UserResponse)
+def update_self(
+    user_data: schemas.UserUpdate,
+    db: Session = Depends(database.get_db),
+    current_user: models.User = Depends(deps.get_current_active_user)
+):
+    # Get the ID from the token
+    updated_user = auth_service.update_user(db, current_user.id, user_data)
+    return updated_user
+
 @router.put("/{user_id}", response_model=schemas.UserResponse)
 def update_user_endpoint(
     user_id: int,
