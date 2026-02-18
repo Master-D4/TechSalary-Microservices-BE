@@ -33,7 +33,7 @@ async def update_user_profile(
 
 
 # --- LIST ALL USERS (Admin/Staff) ---
-@router.get("/users", response_model=UserListResponse)
+@router.get("/users/", response_model=UserListResponse)
 async def list_users(
         request: Request,
         response: Response,
@@ -53,7 +53,7 @@ async def list_users(
 
     data, status_code = await identity_client.forward_request(
         method="GET",
-        path=f"/users{query_params}",
+        path=f"/users/{query_params}",
         headers={"Authorization": auth_header}
     )
 
