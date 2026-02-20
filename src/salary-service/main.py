@@ -3,17 +3,13 @@ from app.api.v1.salary import router as salary_router
 
 app = FastAPI(title="Salary Service")
 
-app.include_router(
-    salary_router,
-    prefix="/api/v1/salary"
-)
+app.include_router(salary_router, prefix="/api/v1/salary")
 
-from app.core.database import engine
-from sqlalchemy import text
 
 @app.get("/health")
 def health():
     return {"status": "running"}
+
 
 @app.get("/")
 def root():
