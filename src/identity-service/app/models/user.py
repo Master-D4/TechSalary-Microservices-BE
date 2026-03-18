@@ -7,19 +7,17 @@ from app.core.database import Base
 user_roles = Table(
     'user_roles',
     Base.metadata,
-    Column('user_id', Integer, ForeignKey('identity.users.id')),
-    Column('role_id', Integer, ForeignKey('identity.roles.id')),
+    Column('user_id', Integer, ForeignKey('identity.users.id', ondelete="CASCADE"), primary_key=True),
+    Column('role_id', Integer, ForeignKey('identity.roles.id', ondelete="CASCADE"), primary_key=True),
     schema='identity'
 )
-
 
 class Role(Base):
     __tablename__ = "roles"
     __table_args__ = {"schema": "identity"}
 
     id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, unique=True, index=True)
-
+    name = Column(String, unique=True, index=True, nullable=False)
 
 class User(Base):
     __tablename__ = "users"
