@@ -1,12 +1,10 @@
-# ==========================================
 # STAGE 1: Builder (Heavy Image)
 # Purpose: Compile dependencies and create wheels
-# ==========================================
 FROM python:3.12-slim as builder
 
 WORKDIR /build
 
-# Install build dependencies (often needed for crypto/database libraries)
+# Install build dependencies
 RUN apt-get update && apt-get install -y gcc libpq-dev && rm -rf /var/lib/apt/lists/*
 
 # Copy only the requirements file first to cache the dependency step
@@ -16,15 +14,13 @@ COPY requirements.txt .
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /build/wheels -r requirements.txt
 
 
-# ==========================================
 # STAGE 2: Runner (Lightweight Image)
 # Purpose: Run the application securely
-# ==========================================
 FROM python:3.12-slim as runner
 
 WORKDIR /app
 
-# Install runtime dependencies for Postgres (much lighter than build tools)
+# Install runtime dependencies for Postgres
 RUN apt-get update && apt-get install -y libpq5 && rm -rf /var/lib/apt/lists/*
 
 # Copy the pre-compiled wheels from the builder stage
