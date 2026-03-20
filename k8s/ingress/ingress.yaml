@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: techsalary-ingress
+  namespace: app # Must be in the same namespace as the services it routes to
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: techsalary.com
+      http:
+        paths:
+          # Routes techsalary.com/api/* to the BFF Service
+          - path: /api(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: techsalary-bff
+                port:
+                  number: 8000
+          # We will add the Frontend route here later!

@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: app
+data:
+  # Cross-namespace DNS routing to the database
+  DATABASE_URL: "postgresql://myuser:mypassword@techsalary-postgres.data.svc.cluster.local:5432/techsalary_db"
+  IDENTITY_SERVICE_URL: "http://techsalary-identity.app.svc.cluster.local:8001/api/v1"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: app-secrets
+  namespace: app
+type: Opaque
+stringData:
+  SECRET_KEY: "super_secret_key_for_dev_only"

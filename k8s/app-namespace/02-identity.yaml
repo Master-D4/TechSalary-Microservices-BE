@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: techsalary-identity
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: identity
+  template:
+    metadata:
+      labels:
+        app: identity
+    spec:
+      containers:
+        - name: identity
+          image: thecoded4/techsalary-identity:v1
+          ports:
+            - containerPort: 8001
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+---
+# Internal Service (Not exposed to the internet)
+apiVersion: v1
+kind: Service
+metadata:
+  name: techsalary-identity
+  namespace: app
+spec:
+  selector:
+    app: identity
+  ports:
+    - port: 8001
+      targetPort: 8001

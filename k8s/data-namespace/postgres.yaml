@@ -1,0 +1,88 @@
+# 1. Database Credentials
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-secrets
+  namespace: data
+type: Opaque
+stringData:
+  POSTGRES_USER: "myuser"
+  POSTGRES_PASSWORD: "mypassword"
+  POSTGRES_DB: "techsalary_db"
+---
+# 2. Persistent Storage (The Hard Drive)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+---
+# 3. The Init Script (Injects your schemas automatically!)
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init-script
+  namespace: data
+data:
+  init.sql: |
+    CREATE SCHEMA IF NOT EXISTS identity;
+    CREATE SCHEMA IF NOT EXISTS salary;
+    CREATE SCHEMA IF NOT EXISTS community;
+---
+# 4. The Database Deployment & Service
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: techsalary-postgres
+  namespace: data
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      db: postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        db: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:15-alpine
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: postgres-secrets
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+            - name: init-script-volume
+              mountPath: /docker-entrypoint-initdb.d/init.sql
+              subPath: init.sql
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+        - name: init-script-volume
+          configMap:
+            name: postgres-init-script
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: techsalary-postgres
+  namespace: data
+spec:
+  selector:
+    db: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432

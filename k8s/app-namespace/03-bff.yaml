@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: techsalary-bff
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bff
+  template:
+    metadata:
+      labels:
+        app: bff
+    spec:
+      containers:
+        - name: bff
+          image: thecoded4/techsalary-bff:v1
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: app-config
+---
+# Internal Service (Will be exposed by Ingress)
+apiVersion: v1
+kind: Service
+metadata:
+  name: techsalary-bff
+  namespace: app
+spec:
+  selector:
+    app: bff
+  ports:
+    - port: 8000
+      targetPort: 8000
