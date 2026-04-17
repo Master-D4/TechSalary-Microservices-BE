@@ -3,7 +3,7 @@ from ..models.salary import Salary
 from sqlalchemy import cast, String
 
 
-def search_salaries(db: Session, search=None, country=None, company=None, status=None, sort_by=None):
+def search_salaries(db: Session, search=None, country=None, company=None, status=None, sort_by=None, page=None, limit=None):
 
     query = db.query(Salary)
 
@@ -28,4 +28,24 @@ def search_salaries(db: Session, search=None, country=None, company=None, status
     elif sort_by == "highest":
         query = query.order_by(Salary.salary_amount.desc())
 
-    return query.all()
+    total = query.count()
+
+    offset = (page - 1) * limit
+    results = query.offset(offset).limit(limit).all()
+
+    return {
+        "items": results,
+        "total": total,
+        "page": page,
+        "limit": limit
+    }
+
+def get_filter_items(db: Session):
+    return {
+        "locations": [
+            row[0] for row in db.query(Salary.location).distinct() if row[0]
+        ],
+        "companies": [
+            row[0] for row in db.query(Salary.company).distinct() if row[0]
+        ],
+    }
