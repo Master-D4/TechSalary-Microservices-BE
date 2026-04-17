@@ -10,11 +10,12 @@ router = APIRouter()
 
 
 @router.get("/search", response_model=List[SalaryResponse])
-def search(
-    location: str = None,
-    company: str = None,
-    job_title: str = None,
-    years_experience: int = None,
+def search_salary(
+    search: str | None = None,
+    location: str | None = None,
+    company: str | None = None,
+    status: str | None = None,
+    sortBy: str = "newest",
     db: Session = Depends(get_db)
 ):
-    return search_salaries(db, location, company, job_title, years_experience)
+    return search_salaries(db, search, location, company, status, sortBy)
