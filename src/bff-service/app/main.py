@@ -21,6 +21,9 @@ app.add_middleware(
 app.include_router(auth.router, prefix="/api/v1", tags=["Authentication"])
 app.include_router(users.router, prefix="/api/v1", tags=["User Management"])
 
+app.include_router(users.router, prefix="/api/v1", tags=["User Management"])
+app.include_router(users.router, prefix="/api/v1", tags=["User Management"])
+
 @app.get("/health")
 def health_check():
     return {"status": "healthy", "service": "bff-service"}
