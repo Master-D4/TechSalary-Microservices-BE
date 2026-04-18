@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     CORS_ORIGINS: str = "*"
 
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file="stats_service.env",
         case_sensitive=True,
         extra="ignore",
     )
