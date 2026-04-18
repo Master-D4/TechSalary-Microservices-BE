@@ -1,12 +1,10 @@
 from fastapi import FastAPI
-from app.api.v1 import search
 from fastapi.middleware.cors import CORSMiddleware
+from app.api.v1.salary import router as salary_router
 
-app = FastAPI(
-    title="Search Service",
-    version="1.0.0"
-)
+app = FastAPI(title="Salary Service")
 
+# CORS setup
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -18,12 +16,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(search.router, prefix="/api/v1/salary")
+# API router
+app.include_router(salary_router, prefix="/api/v1/salary")
 
-
+# Health check
 @app.get("/health")
 def health():
-    return {
-        "status": "healthy",
-        "service": "search-service"
-    }
+    return {"status": "running"}
+
+# Root endpoint
+@app.get("/")
+def root():
+    return {"message": "Salary Service Running"}

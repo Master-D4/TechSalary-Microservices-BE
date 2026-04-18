@@ -1,6 +1,7 @@
 from datetime import datetime
 from decimal import Decimal
 from typing import Literal
+from typing import List
 
 from pydantic import BaseModel
 
@@ -20,3 +21,9 @@ class SalaryResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class SalaryListResponse(BaseModel):
+    items: List[SalaryResponse]
+    total: int
+    page: int
+    limit: int
