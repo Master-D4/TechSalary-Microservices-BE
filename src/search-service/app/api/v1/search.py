@@ -24,7 +24,7 @@ def search_salary(
     return search_salaries(db, search, location, company, status, sortBy, page, limit)
 
 
-@router.get("/filters")
+@router.get("/search/filters")
 def get_filters(db: Session = Depends(get_db)):
 
     return get_filter_items(db)
