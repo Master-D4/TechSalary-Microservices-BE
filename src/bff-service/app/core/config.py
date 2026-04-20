@@ -9,6 +9,8 @@ class Settings(BaseSettings):
     # For Docker/K8s, this will be "http://identity-service:8001"
     IDENTITY_SERVICE_URL: str = "http://localhost:8001/api/v1"
 
+    #Salary service url
+    SALARY_SERVICE_URL: str = "http://localhost:8000/api/v1/salary"
     class Config:
         case_sensitive = True
 
