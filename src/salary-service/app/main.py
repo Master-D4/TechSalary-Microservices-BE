@@ -22,7 +22,7 @@ app.include_router(salary_router, prefix="/api/v1/salary")
 # Health check
 @app.get("/health")
 def health():
-    return {"status": "running"}
+    return {"status": "Salary service is running"}
 
 # Root endpoint
 @app.get("/")

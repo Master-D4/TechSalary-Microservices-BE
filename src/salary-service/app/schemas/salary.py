@@ -29,6 +29,7 @@ class SalaryResponse(BaseModel):
     status: str
     is_anonymous: bool
     created_at: datetime
+    submitted_by: str
 
     class Config:
         orm_mode = True
