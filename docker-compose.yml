@@ -53,5 +53,18 @@ services:
     depends_on:
       - identity-service
 
+  # 4. Salary Service
+  salary-service:
+    build:
+      context: ./src/salary-service
+      dockerfile: Dockerfile
+    container_name: techsalary-salary
+    ports:
+      - "8002:8002"
+    environment:
+      - DATABASE_URL=postgresql://myuser:mypassword@postgres-db:5432/techsalary_db
+    depends_on:
+      postgres-db:
+        condition: service_healthy
 volumes:
   postgres_data:
