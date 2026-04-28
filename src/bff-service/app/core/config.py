@@ -11,6 +11,7 @@ class Settings(BaseSettings):
     SEARCH_SERVICE_URL: str = "http://localhost:8004/api/v1"
     SALARY_SERVICE_URL: str = "http://localhost:8002/api/v1/salary"
     STAT_SERVICE_URL: str = "http://localhost:8006/api/v1"
+    VOTE_SERVICE_URL: str = "http://localhost:8005/vote"
 
     class Config:
         case_sensitive = True
