@@ -60,3 +60,11 @@ spec:
                 name: techsalary-vote
                 port:
                   number: 8005
+
+          - path: /api/v1/stats
+            pathType: Prefix
+            backend:
+              service:
+                name: techsalary-stats
+                port:
+                  number: 8006
