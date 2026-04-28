@@ -2,7 +2,7 @@ from typing import Literal
 from pydantic import BaseModel, field_validator
 
 class VoteRequest(BaseModel):
-    submission_id: int
+    salary_submission_id: int
     vote_type: Literal["UP", "DOWN"]
 
     @field_validator("vote_type", mode="before")
@@ -11,6 +11,12 @@ class VoteRequest(BaseModel):
         if isinstance(value, str):
             return value.strip().upper()
         return value
+
+class ReportRequest(BaseModel):
+    salary_submission_id: int
+    reason: str
+class ReportDelete(BaseModel):
+    salary_submission_id: int
     # from pydantic import BaseModel
 
 # class VoteRequest(BaseModel):
