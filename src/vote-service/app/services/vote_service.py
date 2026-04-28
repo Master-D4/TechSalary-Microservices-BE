@@ -7,6 +7,36 @@ APPROVAL_SCORE_THRESHOLD = 5
 REJECTION_THRESHOLD = 5
 REPORT_THRESHOLD = 5
 
+def get_user_interaction_state(db: Session, salary_submission_id: int, user_id: int):
+    user_id = int(user_id)
+
+    existing_vote = db.query(Vote).filter(
+        Vote.salary_submission_id == salary_submission_id,
+        Vote.user_id == user_id
+    ).first()
+
+    existing_report = db.query(Report).filter(
+        Report.salary_submission_id == salary_submission_id,
+        Report.user_id == user_id
+    ).first()
+
+    up_votes = db.query(func.count(Vote.id)).filter(
+        Vote.salary_submission_id == salary_submission_id,
+        Vote.vote_type == "UP"
+    ).scalar()
+
+    down_votes = db.query(func.count(Vote.id)).filter(
+        Vote.salary_submission_id == salary_submission_id,
+        Vote.vote_type == "DOWN"
+    ).scalar()
+
+    return {
+        "user_vote": existing_vote.vote_type if existing_vote else None,
+        "reported": existing_report is not None,
+        "up_votes": up_votes,
+        "down_votes": down_votes
+    }
+
 def create_vote(db: Session, salary_submission_id: int, user_id: int, vote_type: str):
     user_id = int(user_id)
 

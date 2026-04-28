@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.v1 import auth, users, salary,search, stats
+from app.api.v1 import auth, users, salary,search, stats, vote
 
 app = FastAPI(title="TechSalary BFF", version="1.0.0")
 
@@ -22,6 +22,7 @@ app.include_router(auth.router, prefix="/api/v1", tags=["Authentication"])
 app.include_router(users.router, prefix="/api/v1", tags=["User Management"])
 app.include_router(salary.router, prefix="/api/v1", tags=["Salary"])
 app.include_router(search.router, prefix="/api/v1", tags=["Search"])
+app.include_router(vote.router, prefix="/api/v1", tags=["Vote"])
 
 # Added stat-service Routers
 app.include_router(stats.router, prefix="/api/v1", tags=["Stats"])

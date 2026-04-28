@@ -4,7 +4,7 @@ from jose import jwt, JWTError, ExpiredSignatureError
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from ..database import SessionLocal
 from ..schemas.vote import ReportDelete, ReportRequest, VoteRequest
-from ..services.vote_service import create_report, create_vote, delete_report_service, delete_vote_service
+from ..services.vote_service import create_report, create_vote, delete_report_service, delete_vote_service, get_user_interaction_state
 from ..core import config
 
 router = APIRouter()
@@ -39,6 +39,21 @@ def verify_token(token: str):
         raise HTTPException(status_code=401, detail="Token expired")
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
+
+
+@router.get("/State/{salary_submission_id}")
+def user_interaction_state(
+    salary_submission_id: int,
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+    db: Session = Depends(get_db)
+):
+    token = credentials.credentials
+    if not token:
+        raise HTTPException(status_code=401, detail="Token required")
+
+    user_id = verify_token(token)
+
+    return get_user_interaction_state(db, salary_submission_id, user_id)
 
 
 # -------------------------------
