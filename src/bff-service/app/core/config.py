@@ -8,6 +8,8 @@ class Settings(BaseSettings):
     # URL of the internal Identity Service
     # For Docker/K8s, this will be "http://identity-service:8001"
     IDENTITY_SERVICE_URL: str = "http://localhost:8001/api/v1"
+    SEARCH_SERVICE_URL: str = "http://localhost:8004/api/v1"
+    SALARY_SERVICE_URL: str = "http://localhost:8002/api/v1/salary"
     STAT_SERVICE_URL: str = "http://localhost:8006/api/v1"
 
     class Config:
