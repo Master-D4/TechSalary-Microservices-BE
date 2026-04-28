@@ -1,30 +1,35 @@
-from pydantic import BaseModel, Field
-from decimal import Decimal
+from pydantic import BaseModel, condecimal, constr, conint
 from datetime import datetime
-from typing import Literal
 
-Status = Literal["PENDING", "APPROVED", "REJECTED"]
+NonEmptyStr = constr(strip_whitespace=True, min_length=1)
+
 
 class SalaryCreate(BaseModel):
-    job_title: str
-    company: str
-    location: str
-    salary_amount: Decimal = Field(..., gt=0)
-    currency: str = "LKR"
-    years_experience: int = Field(..., ge=0)
+    job_title: NonEmptyStr
+    company: NonEmptyStr
+    location: NonEmptyStr
+
+    salary_amount: condecimal(gt=0, max_digits=12, decimal_places=2)
+
+    currency: constr(strip_whitespace=True, min_length=1, max_length=10) = "LKR"
+
+    years_experience: conint(ge=0)
+
     is_anonymous: bool = False
+
 
 class SalaryResponse(BaseModel):
     id: int
     job_title: str
     company: str
     location: str
-    salary_amount: Decimal
+    salary_amount: float
     currency: str
     years_experience: int
-    status: Status
+    status: str
     is_anonymous: bool
     created_at: datetime
+    submitted_by: str
 
     class Config:
-        from_attributes = True
+        orm_mode = True
