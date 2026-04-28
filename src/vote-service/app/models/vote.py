@@ -23,3 +23,4 @@ class Report(Base):
     user_id = Column(Integer, nullable=False)
     reason = Column(Text, nullable=True)
     created_at = Column(DateTime, server_default=func.now())
+   

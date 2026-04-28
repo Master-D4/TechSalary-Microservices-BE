@@ -41,9 +41,6 @@ def verify_token(token: str):
         raise HTTPException(status_code=401, detail="Invalid token")
 
 
-# -------------------------------
-# Vote Endpoint
-# -------------------------------
 @router.post("/Add")
 def vote(
     request: VoteRequest,
@@ -65,9 +62,7 @@ def vote(
 
     return result
 
-# -------------------------------
-# Delete Vote Endpoint
-# -------------------------------
+
 # FastAPI route
 @router.delete("/Delete")
 def delete_vote(
@@ -103,9 +98,7 @@ def report(
 
     return create_report(db, request.salary_submission_id, user_id,request.reason)
 
-# -------------------------------
-# Delete Report
-# -------------------------------
+
 @router.delete("/Report")
 def delete_report(
     request: ReportDelete,

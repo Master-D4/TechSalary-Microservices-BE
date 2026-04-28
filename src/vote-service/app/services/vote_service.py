@@ -17,7 +17,6 @@ def create_vote(db: Session, salary_submission_id: int, user_id: int, vote_type:
 
     try:
         if existing:
-            # Update existing vote
             existing.vote_type = vote_type
         else:
             # Insert new vote

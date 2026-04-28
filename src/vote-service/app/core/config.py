@@ -14,3 +14,5 @@ class Settings:
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
 settings = Settings()
+
+

@@ -5,7 +5,6 @@ from fastapi import HTTPException
 
 from app.core.config import settings
 
-
 class VoteClient:
     async def forward_request(
         self,

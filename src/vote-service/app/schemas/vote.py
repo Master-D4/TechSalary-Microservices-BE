@@ -17,8 +17,5 @@ class ReportRequest(BaseModel):
     reason: str
 class ReportDelete(BaseModel):
     salary_submission_id: int
-    # from pydantic import BaseModel
+  
 
-# class VoteRequest(BaseModel):
-#     salary_submission_id: int
-#     vote_type: str  # "UP" or "DOWN"
