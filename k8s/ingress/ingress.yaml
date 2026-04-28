@@ -52,3 +52,11 @@ spec:
                 name: techsalary-search
                 port:
                   number: 8004
+
+          - path: /vote
+            pathType: Prefix
+            backend:
+              service:
+                name: techsalary-vote
+                port:
+                  number: 8005
