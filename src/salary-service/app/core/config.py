@@ -13,8 +13,11 @@ load_env()
 
 
 class Settings:
-    DATABASE_URL: str | None = os.getenv("DATABASE_URL")
-    INTERNAL_TOKEN: str | None = os.getenv("INTERNAL_TOKEN")
+    DATABASE_URL: str = os.getenv(
+        "DATABASE_URL",
+        "postgresql://myuser:mypassword@localhost:5433/techsalary_db",
+    )
+    INTERNAL_TOKEN: str = os.getenv("INTERNAL_TOKEN", "dev_internal_token")
 
 
 settings = Settings()

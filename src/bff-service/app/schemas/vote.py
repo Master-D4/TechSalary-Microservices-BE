@@ -1,5 +1,7 @@
 from typing import Literal
+
 from pydantic import BaseModel, field_validator
+
 
 class VoteRequest(BaseModel):
     salary_submission_id: int
@@ -7,18 +9,16 @@ class VoteRequest(BaseModel):
 
     @field_validator("vote_type", mode="before")
     @classmethod
-    def normalize_vote_type(cls, value):
+    def normalize_vote_type(cls, value: str):
         if isinstance(value, str):
             return value.strip().upper()
         return value
 
+
 class ReportRequest(BaseModel):
     salary_submission_id: int
     reason: str
+
+
 class ReportDelete(BaseModel):
     salary_submission_id: int
-    # from pydantic import BaseModel
-
-# class VoteRequest(BaseModel):
-#     salary_submission_id: int
-#     vote_type: str  # "UP" or "DOWN"

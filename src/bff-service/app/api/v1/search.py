@@ -11,9 +11,9 @@ async def search_salary(
         location: str | None = None,
         company: str | None = None,
         status: str | None = None,
-        sortBy: str | None = None,
-        page: str | None = None,
-        limit: str | None = None,
+        sortBy: str = "newest",
+        page: int = 1,
+        limit: int = 20,
 ):
     params = {
         "search": search,
@@ -24,6 +24,7 @@ async def search_salary(
         "page": page,
         "limit": limit,
     }
+    params = {key: value for key, value in params.items() if value is not None}
 
     data, status_code = await search_client.forward_request(
         method="GET",

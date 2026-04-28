@@ -52,7 +52,7 @@ CREATE TABLE salary.salary_submissions (
     currency VARCHAR(10) DEFAULT 'LKR',
     years_experience INTEGER NOT NULL,
 
-    status VARCHAR(20) DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED')),
+    status VARCHAR(20) DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'APPROVED', 'REJECTED', 'REPORTED')),
 
     -- Anonymity Flag: If TRUE, we hide specific company/job details in public search
     is_anonymous BOOLEAN DEFAULT FALSE,

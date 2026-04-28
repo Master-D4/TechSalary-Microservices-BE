@@ -9,7 +9,7 @@ def _apply_anonymization(salary: SalarySubmission):
 
 
 def create_salary(db: Session, data):
-    payload = data.dict()
+    payload = data.model_dump()
 
     # Always store new submissions as PENDING
     payload["status"] = "PENDING"
