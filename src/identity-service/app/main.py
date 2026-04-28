@@ -39,4 +39,6 @@ app.include_router(
 
 @app.get("/health")
 def health_check():
-    return {"status": "healthy", "service": "identity-service"}
+    # return {"status": "healthy", "service": "identity-service"}
+    # Triggering CI/CD pipeline
+    return {"status": "Healthy Triggering CI/CD pipeline", "service": "identity-service"}
