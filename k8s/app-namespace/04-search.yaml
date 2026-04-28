@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: techsalary-search
+  namespace: app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: search
+  template:
+    metadata:
+      labels:
+        app: search
+    spec:
+      containers:
+        - name: search
+          image: techsalaryacrd4.azurecr.io/techsalary-search:latest
+          ports:
+            - containerPort: 8004
+          # --- WE CHANGED THIS TO MATCH IDENTITY ---
+          envFrom:
+            - configMapRef:
+                name: app-config
+            - secretRef:
+                name: app-secrets
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: techsalary-search
+  namespace: app
+spec:
+  selector:
+    app: search
+  ports:
+    - port: 8004
+      targetPort: 8004

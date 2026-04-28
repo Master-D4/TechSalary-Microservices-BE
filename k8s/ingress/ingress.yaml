@@ -45,3 +45,10 @@ spec:
                   number: 8000
 
           # Add the Frontend route here later
+          - path: /api/v1/search
+            pathType: Prefix
+            backend:
+              service:
+                name: techsalary-search
+                port:
+                  number: 8004
