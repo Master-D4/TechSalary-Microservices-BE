@@ -1,0 +1,50 @@
+# This pipeline ONLY watches the bff-service folder!
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - src/bff-service/*
+      - k8s/app-namespace/03-bff.yaml
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  dockerRegistryServiceConnection: 'ACR-Connection'
+  kubernetesServiceConnection: 'AKS-Connection'
+  imageRepository: 'techsalary-bff'
+
+stages:
+- stage: BuildAndDeploy
+  displayName: 'Deploy BFF Service'
+  jobs:
+  - job: Deploy
+    steps:
+    - task: Docker@2
+      displayName: 'Build & Push BFF Image'
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: 'src/bff-service/Dockerfile'
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: 'latest'
+
+    - task: KubernetesManifest@1
+      displayName: 'Apply Kubernetes YAML'
+      inputs:
+        action: 'deploy'
+        connectionType: 'kubernetesServiceConnection'
+        kubernetesServiceConnection: $(kubernetesServiceConnection)
+        namespace: 'app'
+        manifests: 'k8s/app-namespace/03-bff.yaml'
+
+    - task: Kubernetes@1
+      displayName: 'Restart BFF Pod'
+      inputs:
+        connectionType: 'Kubernetes Service Connection'
+        kubernetesServiceEndpoint: $(kubernetesServiceConnection)
+        namespace: 'app'
+        command: 'rollout'
+        arguments: 'restart deployment techsalary-bff'
