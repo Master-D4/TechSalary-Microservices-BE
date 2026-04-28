@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
         - name: bff
-          image: thecoded4/techsalary-bff:v1
+          #image: thecoded4/techsalary-bff:v1
+          image: techsalaryacrd4.azurecr.io/techsalary-bff:latest
           ports:
             - containerPort: 8000
           envFrom:

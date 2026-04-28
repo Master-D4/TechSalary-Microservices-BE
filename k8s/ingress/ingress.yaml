@@ -6,10 +6,10 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: techsalary.com
-      http:
+    #- host: techsalary.com
+    - http:
         paths:
-          # 1. Allow all your actual API traffic through untouched
+          # 1. Allow all actual API traffic through untouched
           - path: /api
             pathType: Prefix
             backend:
@@ -30,6 +30,14 @@ spec:
           # 3. Allow the JSON schema that Swagger needs to render the page
           - path: /openapi.json
             pathType: ImplementationSpecific
+            backend:
+              service:
+                name: techsalary-bff
+                port:
+                  number: 8000
+
+          - path: /health
+            pathType: Prefix
             backend:
               service:
                 name: techsalary-bff
