@@ -2,21 +2,46 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: techsalary-ingress
-  namespace: app # Must be in the same namespace as the services it routes to
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  namespace: app
 spec:
   ingressClassName: nginx
   rules:
-    - host: techsalary.com
-      http:
+    #- host: techsalary.com
+    - http:
         paths:
-          # Routes techsalary.com/api/* to the BFF Service
-          - path: /api(/|$)(.*)
+          # 1. Allow all actual API traffic through untouched
+          - path: /api
             pathType: Prefix
             backend:
               service:
                 name: techsalary-bff
                 port:
                   number: 8000
-          # We will add the Frontend route here later!
+
+          # 2. Allow the Swagger UI HTML page through
+          - path: /docs
+            pathType: Prefix
+            backend:
+              service:
+                name: techsalary-bff
+                port:
+                  number: 8000
+
+          # 3. Allow the JSON schema that Swagger needs to render the page
+          - path: /openapi.json
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: techsalary-bff
+                port:
+                  number: 8000
+
+          - path: /health
+            pathType: Prefix
+            backend:
+              service:
+                name: techsalary-bff
+                port:
+                  number: 8000
+
+          # Add the Frontend route here later
