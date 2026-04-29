@@ -3,13 +3,27 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.schemas.salary import SalaryCreate, SalaryResponse
 from app.services import salary_service
+from app.services.salary_service import create_salary, serialize_salary
+
 
 router = APIRouter()
 
+# @router.post("/", response_model=SalaryResponse)
+# def create_salary(data: SalaryCreate, db: Session = Depends(get_db)):
+#     return salary_service.create_salary(db, data)
+
 
 @router.post("/", response_model=SalaryResponse)
-def create_salary(data: SalaryCreate, db: Session = Depends(get_db)):
-    return salary_service.create_salary(db, data)
+def add_salary(data: SalaryCreate, db: Session = Depends(get_db)):
+    # 1. Save to database
+    new_salary = create_salary(db, data)
+
+    # 2. Dynamically determine the visibility based on the payload
+    # If is_anonymous is True, this becomes False. If False, it becomes True.
+    user_visibility = not data.is_anonymous
+
+    # 3. Format it properly with dynamic visibility!
+    return serialize_salary(new_salary, is_logged_in=user_visibility)
 
 
 @router.get("/approved",response_model=list[SalaryResponse])

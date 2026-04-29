@@ -1,7 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: salary-config
-  namespace: app
-data:
-  internal_token: dev-internal-token
