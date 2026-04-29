@@ -3,16 +3,37 @@ from app.models.salary import SalarySubmission
 
 
 def create_salary(db: Session, data):
-    payload = data.dict()
-    payload["status"] = "PENDING"
+    try:
+        payload = data.dict()
+        payload["status"] = "PENDING"
 
-    salary = SalarySubmission(**payload)
-    db.add(salary)
-    db.commit()
-    db.refresh(salary)
+        if "salary_amount" in payload:
+            payload["salary_amount"] = float(payload["salary_amount"])
 
-    return salary
+        salary = SalarySubmission(**payload)
 
+        db.add(salary)
+        db.commit()
+        db.refresh(salary)
+
+        return {
+            "id": salary.id,
+            "job_title": salary.job_title,
+            "company": salary.company,
+            "location": salary.location,
+            "salary_amount": float(salary.salary_amount),
+            "currency": salary.currency,
+            "years_experience": salary.years_experience,
+            "status": salary.status,
+            "is_anonymous": salary.is_anonymous,
+            "created_at": salary.created_at,
+            "submitted_by": "Anonymous"
+        }
+
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        raise
 
 def serialize_salary(salary: SalarySubmission, is_logged_in: bool):
     return {
@@ -29,13 +50,11 @@ def serialize_salary(salary: SalarySubmission, is_logged_in: bool):
         "is_anonymous": salary.is_anonymous,
     }
 
-
 def get_approved(
     db: Session,
     is_logged_in: bool,
     limit: int = 20,
     offset: int = 0,
-    status: str | None = None,
     job_title: str | None = None,
     company: str | None = None,
     location: str | None = None,
