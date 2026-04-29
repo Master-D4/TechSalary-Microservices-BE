@@ -4,21 +4,18 @@ metadata:
   name: techsalary-ingress
   namespace: app
   annotations:
-    # TELLS NGINX TO REQUEST A CERTIFICATE
     cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
-  # SECURES THE CONNECTION
   tls:
     - hosts:
         - "20.197.82.255.nip.io"
       secretName: techsalary-tls-secret
   rules:
-    # ROUTES TRAFFIC FROM DOMAIN NAME
     - host: "20.197.82.255.nip.io"
       http:
         paths:
-          # 1. Allow all actual API traffic through untouched
+          # 1. Allow all actual API traffic through to the BFF
           - path: /api
             pathType: Prefix
             backend:
@@ -27,7 +24,7 @@ spec:
                 port:
                   number: 8000
 
-          # 2. Allow the Swagger UI HTML page through
+          # 2. Allow the Swagger UI HTML page through to the BFF
           - path: /docs
             pathType: Prefix
             backend:
@@ -45,6 +42,7 @@ spec:
                 port:
                   number: 8000
 
+          # 4. Allow BFF Health check
           - path: /health
             pathType: Prefix
             backend:
@@ -52,36 +50,3 @@ spec:
                 name: techsalary-bff
                 port:
                   number: 8000
-
-          # Add the Frontend route here later
-          - path: /api/v1/salary
-            pathType: Prefix
-            backend:
-              service:
-                name: techsalary-salary
-                port:
-                  number: 8003
-
-          - path: /api/v1/search
-            pathType: Prefix
-            backend:
-              service:
-                name: techsalary-search
-                port:
-                  number: 8004
-
-          - path: /vote
-            pathType: Prefix
-            backend:
-              service:
-                name: techsalary-vote
-                port:
-                  number: 8005
-
-          - path: /api/v1/stats
-            pathType: Prefix
-            backend:
-              service:
-                name: techsalary-stats
-                port:
-                  number: 8006
