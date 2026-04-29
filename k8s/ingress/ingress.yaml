@@ -3,11 +3,20 @@ kind: Ingress
 metadata:
   name: techsalary-ingress
   namespace: app
+  annotations:
+    # TELLS NGINX TO REQUEST A CERTIFICATE
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
 spec:
   ingressClassName: nginx
+  # SECURES THE CONNECTION
+  tls:
+    - hosts:
+        - "20.197.82.255.nip.io"
+      secretName: techsalary-tls-secret
   rules:
-    #- host: techsalary.com
-    - http:
+    # ROUTES TRAFFIC FROM DOMAIN NAME
+    - host: "20.197.82.255.nip.io"
+      http:
         paths:
           # 1. Allow all actual API traffic through untouched
           - path: /api
