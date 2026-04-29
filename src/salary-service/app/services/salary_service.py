@@ -50,9 +50,10 @@ def create_salary(db: Session, data):
 #         "is_anonymous": salary.is_anonymous,
 #     }
 
-def serialize_salary(salary, is_logged_in: bool):
+def serialize_salary(salary, is_logged_in: bool = False):
     # 1. If the data arrives as a Python Dictionary
     if isinstance(salary, dict):
+        is_anon = salary.get("is_anonymous", False)
         return {
             "id": salary.get("id"),
             "job_title": salary.get("job_title"),
@@ -63,8 +64,8 @@ def serialize_salary(salary, is_logged_in: bool):
             "years_experience": salary.get("years_experience"),
             "status": salary.get("status"),
             "created_at": salary.get("created_at"),
-            "submitted_by": "User" if is_logged_in else "Anonymous",
-            "is_anonymous": salary.get("is_anonymous", False),
+            "submitted_by": "Anonymous" if is_anon else "User",
+            "is_anonymous": is_anon,
         }
 
     # 2. If the data arrives as a SQLAlchemy Object
@@ -78,7 +79,7 @@ def serialize_salary(salary, is_logged_in: bool):
         "years_experience": salary.years_experience,
         "status": salary.status,
         "created_at": salary.created_at,
-        "submitted_by": "User" if is_logged_in else "Anonymous",
+        "submitted_by": "Anonymous" if salary.is_anonymous else "User",
         "is_anonymous": salary.is_anonymous,
     }
 
