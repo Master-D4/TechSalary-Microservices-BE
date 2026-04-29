@@ -29,4 +29,4 @@ app.include_router(stats.router, prefix="/api/v1", tags=["Stats"])
 
 @app.get("/health")
 def health_check():
-    return {"status": "healthy", "service": "bff-service"}
+    return {"status": "healthy CI/CD", "service": "bff-service"}
