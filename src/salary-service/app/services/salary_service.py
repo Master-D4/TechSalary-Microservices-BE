@@ -35,7 +35,39 @@ def create_salary(db: Session, data):
         traceback.print_exc()
         raise
 
-def serialize_salary(salary: SalarySubmission, is_logged_in: bool):
+# def serialize_salary(salary: SalarySubmission, is_logged_in: bool):
+#     return {
+#         "id": salary.id,
+#         "job_title": salary.job_title,
+#         "company": salary.company,
+#         "location": salary.location,
+#         "salary_amount": float(salary.salary_amount),
+#         "currency": salary.currency,
+#         "years_experience": salary.years_experience,
+#         "status": salary.status,
+#         "created_at": salary.created_at,
+#         "submitted_by": "User" if is_logged_in else "Anonymous",
+#         "is_anonymous": salary.is_anonymous,
+#     }
+
+def serialize_salary(salary, is_logged_in: bool):
+    # 1. If the data arrives as a Python Dictionary
+    if isinstance(salary, dict):
+        return {
+            "id": salary.get("id"),
+            "job_title": salary.get("job_title"),
+            "company": salary.get("company"),
+            "location": salary.get("location"),
+            "salary_amount": float(salary.get("salary_amount", 0)),
+            "currency": salary.get("currency"),
+            "years_experience": salary.get("years_experience"),
+            "status": salary.get("status"),
+            "created_at": salary.get("created_at"),
+            "submitted_by": "User" if is_logged_in else "Anonymous",
+            "is_anonymous": salary.get("is_anonymous", False),
+        }
+
+    # 2. If the data arrives as a SQLAlchemy Object
     return {
         "id": salary.id,
         "job_title": salary.job_title,
