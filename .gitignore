@@ -1,9 +1,40 @@
+# ========================
+# Python & Environment
+# ========================
 venv/
-.idea/
 __pycache__/
 *.pyc
 .env
-.DS_Store__pycache__/
-*.pyc
-__pycache__/
-*.pyc
+
+# ========================
+# OS & IDE
+# ========================
+.idea/
+.DS_Store
+
+# ========================
+# Terraform
+# ========================
+# Ignore local provider plugins (This is what is causing your oversize error!)
+**/.terraform/*
+
+# Ignore state files (These contain sensitive secrets like DB passwords!)
+*.tfstate
+*.tfstate.*
+
+# Ignore sensitive variable files (Only commit example/template variables)
+*.tfvars
+*.tfvars.json
+!example.tfvars
+
+# Ignore crash logs and override files
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc

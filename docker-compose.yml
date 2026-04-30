@@ -30,7 +30,7 @@ services:
     ports:
       - "8001:8001"
     environment:
-      # Notice we use the container name 'postgres-db' instead of localhost
+      # Use the container name 'postgres-db' instead of localhost
       - DATABASE_URL=postgresql://myuser:mypassword@postgres-db:5432/techsalary_db
       - SECRET_KEY=super_secret_key_for_dev_only
       - ALGORITHM=HS256
@@ -48,7 +48,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      # Notice we use the container name 'identity-service' instead of localhost
+      # Use the container name 'identity-service' instead of localhost
       - IDENTITY_SERVICE_URL=http://identity-service:8001/api/v1
     depends_on:
       - identity-service
