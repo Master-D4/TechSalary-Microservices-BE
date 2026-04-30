@@ -18,11 +18,24 @@ spec:
           image: techsalaryacrd4.azurecr.io/techsalary-vote:latest
           ports:
             - containerPort: 8005
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8005
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8005
+            initialDelaySeconds: 5
+            periodSeconds: 10
           envFrom:
             - configMapRef:
                 name: app-config
             - secretRef:
                 name: app-secrets
+
 ---
 apiVersion: v1
 kind: Service

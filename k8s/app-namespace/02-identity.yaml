@@ -15,17 +15,28 @@ spec:
     spec:
       containers:
         - name: identity
-          #image: thecoded4/techsalary-identity:v1
           image: techsalaryacrd4.azurecr.io/techsalary-identity:latest
           ports:
             - containerPort: 8001
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8001
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8001
+            initialDelaySeconds: 5
+            periodSeconds: 10
           envFrom:
             - configMapRef:
                 name: app-config
             - secretRef:
                 name: app-secrets
+
 ---
-# Internal Service (Not exposed to the internet)
 apiVersion: v1
 kind: Service
 metadata:

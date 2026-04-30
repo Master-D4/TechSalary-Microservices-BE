@@ -18,12 +18,24 @@ spec:
           image: techsalaryacrd4.azurecr.io/techsalary-search:latest
           ports:
             - containerPort: 8004
-          # --- WE CHANGED THIS TO MATCH IDENTITY ---
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8004
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8004
+            initialDelaySeconds: 5
+            periodSeconds: 10
           envFrom:
             - configMapRef:
                 name: app-config
             - secretRef:
                 name: app-secrets
+
 ---
 apiVersion: v1
 kind: Service
