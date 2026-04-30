@@ -6,7 +6,8 @@ app = FastAPI(title="TechSalary BFF", version="1.0.0")
 
 # CORS CONFIGURATION
 origins = [
-    "http://localhost:3000"
+    "http://localhost:3000",
+    "http://40.119.238.174"
 ]
 
 app.add_middleware(
