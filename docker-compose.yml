@@ -30,7 +30,6 @@ services:
     ports:
       - "8001:8001"
     environment:
-      # Use the container name 'postgres-db' instead of localhost
       - DATABASE_URL=postgresql://myuser:mypassword@postgres-db:5432/techsalary_db
       - SECRET_KEY=super_secret_key_for_dev_only
       - ALGORITHM=HS256
@@ -39,7 +38,63 @@ services:
       postgres-db:
         condition: service_healthy
 
-  # 3. BFF Service
+  # 3. Salary Service
+  salary-service:
+    build:
+      context: ./src/salary-service
+      dockerfile: Dockerfile
+    container_name: techsalary-salary
+    ports:
+      - "8003:8003"
+    environment:
+      - DATABASE_URL=postgresql://myuser:mypassword@postgres-db:5432/techsalary_db
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+
+  # 4. Search Service
+  search-service:
+    build:
+      context: ./src/search-service
+      dockerfile: Dockerfile
+    container_name: techsalary-search
+    ports:
+      - "8004:8004"
+    environment:
+      - DATABASE_URL=postgresql://myuser:mypassword@postgres-db:5432/techsalary_db
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+
+  # 5. Vote Service
+  vote-service:
+    build:
+      context: ./src/vote-service
+      dockerfile: Dockerfile
+    container_name: techsalary-vote
+    ports:
+      - "8005:8005"
+    environment:
+      - DATABASE_URL=postgresql://myuser:mypassword@postgres-db:5432/techsalary_db
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+
+  # 6. Stats Service
+  stats-service:
+    build:
+      context: ./src/stats-service
+      dockerfile: Dockerfile
+    container_name: techsalary-stats
+    ports:
+      - "8006:8006"
+    environment:
+      - DATABASE_URL=postgresql://myuser:mypassword@postgres-db:5432/techsalary_db
+    depends_on:
+      postgres-db:
+        condition: service_healthy
+
+  # 7. BFF Service (Gateway)
   bff-service:
     build:
       context: ./src/bff-service
@@ -48,23 +103,17 @@ services:
     ports:
       - "8000:8000"
     environment:
-      # Use the container name 'identity-service' instead of localhost
       - IDENTITY_SERVICE_URL=http://identity-service:8001/api/v1
+      - SALARY_SERVICE_URL=http://salary-service:8003/api/v1/salary
+      - SEARCH_SERVICE_URL=http://search-service:8004/api/v1
+      - VOTE_SERVICE_URL=http://vote-service:8005/vote
+      - STAT_SERVICE_URL=http://stats-service:8006/api/v1
     depends_on:
       - identity-service
+      - salary-service
+      - search-service
+      - vote-service
+      - stats-service
 
-  # 4. Salary Service
-  salary-service:
-    build:
-      context: ./src/salary-service
-      dockerfile: Dockerfile
-    container_name: techsalary-salary
-    ports:
-      - "8002:8002"
-    environment:
-      - DATABASE_URL=postgresql://myuser:mypassword@postgres-db:5432/techsalary_db
-    depends_on:
-      postgres-db:
-        condition: service_healthy
 volumes:
   postgres_data:
